@@ -1,6 +1,6 @@
 {
   "name": "f-validator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimal and composable JSON validator",
   "main": "lib/f-validator.js",
   "repository": {
