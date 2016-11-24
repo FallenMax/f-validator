@@ -1,6 +1,6 @@
 # F-Validator
 
-Minimal yet powerful JSON validator
+Minimal and composable JSON validator
 
 ## Features
 

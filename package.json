@@ -1,8 +1,12 @@
 {
   "name": "f-validator",
   "version": "1.0.0",
-  "description": "JSON validator",
+  "description": "Minimal and composable JSON validator",
   "main": "lib/f-validator.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FallenMax/f-validator"
+  },
   "author": "FallenMax@gmail.com",
   "license": "MIT",
   "scripts": {
@@ -16,5 +20,9 @@
   "devDependencies": {
     "rollup": "^0.36.3",
     "rollup-plugin-buble": "^0.14.0"
-  }
+  },
+  "keywords": [
+    "validator",
+    "json validator"
+  ]
 }
