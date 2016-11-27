@@ -19,12 +19,16 @@ Functional JSON validator
   const { string, number, optional, or, objectOf, arrayOf, error } = require('f-validator')
   const equal = require('assert').deepStrictEqual
 
+
   // Every validator is just a function
   const validator1 = string
   equal(validator1('I am a string'), null) // passed check -> null
 
+
   // Some validator can use other validators
+  // e.g. `or`, `optional`, `objectOf`, `arrayOf`
   const validator2 = or(string, number)
+
 
   // To validate object, `objectOf` takes a schema where each field is a validator
   const validator3 = objectOf({
@@ -34,7 +38,8 @@ Functional JSON validator
     })
   })
 
-  // To validate array, `arrayOf` takes a validator which checks every element
+
+  // To validate array, `arrayOf` takes a validator which will be used to check every element
   const validator4 = arrayOf(validator3)
 
   const good = {
@@ -59,23 +64,47 @@ Functional JSON validator
     message: 'Path:\'1.b.c\', Expected: or(null or undefined, string), Received: \'42\''
   })
 
-  // sometimes, you need your own validator
+
+  // Sometimes, you'll need your own validator
+  // any function can be used as a 'Validator' if it has this signature:
+
   /**
-   * Any function can be used as a 'Validator' if it follows this signature:
-   *
-   * @param Any value  value to check
-   * @param Array<String> path  a key-path pointing to the field
+   * @param any subject, subject to check
+   * @param []string path, a key-path pointing to the field
    * @returns
-   *   null   if it passes the check
-   *   error  an object created with `error` utility
+   *   null, if it passes the check
+   *   Object error, an error object created with `error` utility
    */
-  const evenNumber = (value, path = []) => {
-    if (typeof value == 'number' && (value % 2 === 0)) {
+
+  // Example 1: a humble even number validator
+  const evenNumber = (subject, path = []) => {
+    if (typeof subject == 'number' && (subject % 2 === 0)) {
       return null
     } else {
-      return error(path, 'an even number', value) // keypath, expected, received
+      return error(path, 'an even number', subject) // keypath, expected, received
     }
   }
+
+  // now it can be used by other validator
+  const arrayOfEvenNumber = arrayOf(evenNumber)
+  equal(arrayOfEvenNumber([2, 4, 6, 9]), {
+    path: [3], // the 4th element
+    expected: 'an even number',
+    received: 9,
+    message: 'Path:\'3\', Expected: an even number, Received: \'9\''
+  })
+
+  // Example 2:  a stringified-json-object-conforming-to-a-given-validator validator
+  const jsonString = validator =>
+    (subject, path = []) => {
+      let parsed
+      try {
+        parsed = JSON.parse(subject)
+      } catch (e) {
+        return error(path, `json string of (${validator.name})`, subject)
+      }
+      return validator(parsed, path) // note: `path` should be passed to it
+    }
 
 ```
 
