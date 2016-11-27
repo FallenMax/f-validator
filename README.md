@@ -1,18 +1,18 @@
 # F-Validator
 
-Minimal and composable JSON validator
+Functional JSON validator
 
 ## Features
 
-- Minimal, ~200 LoC with no dependencies.
-- Simple, validators are just functions (that composes), no schema/DSL to learn
-- Powerful, complex validator can be built with basic or custom validators
+- Minimal, ~200 LoC, no dependencies.
+- Simple, validators are just functions, no special DSL to learn
+- Powerful, compose basic/custom validators to build complex ones
 
 ## Installation
 
 `npm install --save f-validator`
 
-## Examples
+## Get started
 
 ```javascript
 
@@ -26,7 +26,7 @@ Minimal and composable JSON validator
   // Some validator can use other validators
   const validator2 = or(string, number)
 
-  // to create an object validator, `objectOf` takes a schema where each field is a validator
+  // To validate object, `objectOf` takes a schema where each field is a validator
   const validator3 = objectOf({
     a: or(string, number),
     b: objectOf({
@@ -34,7 +34,7 @@ Minimal and composable JSON validator
     })
   })
 
-  // to create an array validator, `arrayOf` takes a validator which checks every element
+  // To validate array, `arrayOf` takes a validator which checks every element
   const validator4 = arrayOf(validator3)
 
   const good = {
@@ -109,7 +109,7 @@ Minimal and composable JSON validator
 
 `empty` - valid if **value** is `null` or `undefined`
 
-`regex(re:regexp)` - valid if **value** matches regex **re**
+`regex(re:regexp)` - valid if **value** matches regex `re`
 
 ### 3. Composite type validators:
 
@@ -130,7 +130,7 @@ Minimal and composable JSON validator
 
 `optional(v:validator)` - valid if **value** is either validated by `v` or null/undefined
 
-`is(ref:any)` - valid if **value** is **strictly deeply equal** to `ref`
+`is(ref:any)` - valid if **value** is strictly deeply equal to `ref`
 
 `oneOf(...refs:[]any)` - valid if **value** is strictly deeply equal to any element of `refs`
 
