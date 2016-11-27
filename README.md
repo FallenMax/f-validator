@@ -146,6 +146,7 @@ Functional JSON validator
 
 `arrayOf(v:Validator)` - valid if **value** is an array where every element is validated by `v`
 
+`jsonString(v:Validator)` - valid if **value** is an stringified object that is validated by `v`
 
 ### 4. Logical validators:
 
