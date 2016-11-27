@@ -41,7 +41,7 @@ const nullOrUndefined = (s, path) => s == null ? null : error(path, 'null or und
  * Logical Operators
  */
 const not = v =>
-  (s, path) => v(s) ? null : error(path, `not(${v.name})`, s)
+  (s, path) => v(s, path) ? null : error(path, `not(${v.name})`, s)
 
 const any =
   (s, path) => null
@@ -119,6 +119,17 @@ const arrayOf = v =>
     return null
   }
 
+const jsonString = v =>
+  (s, path = []) => {
+    let parsed
+    try {
+      parsed = JSON.parse(s)
+    } catch (e) {
+      return error(path, `json string of (${v.name})`, s)
+    }
+    return v(parsed, path)
+  }
+
 const toObjSchema = ref => {
   switch (type(ref)) {
     case 'function':
@@ -184,5 +195,6 @@ module.exports = {
   like,
 
   objectOf,
-  arrayOf
+  arrayOf,
+  jsonString
 }

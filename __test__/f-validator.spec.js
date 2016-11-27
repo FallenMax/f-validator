@@ -24,8 +24,9 @@ const {
   like,
 
   objectOf,
-  arrayOf
-} = require('../lib/f-validator')
+  arrayOf,
+  jsonString
+} = require('../index')
 
 
 const createError = (path = [], expected, received, message) =>
@@ -408,6 +409,26 @@ const tests = [
       })
     })),
     expected: createError([1, 'obj', 'num'], 'number', '333')
+  },
+
+  {
+    desc: 'jsonString ✔️ : a json string matching custom validator',
+    subject: '{ "str": "apple", "num": 42 }',
+    schema: jsonString(objectOf({
+      str: string,
+      num: number
+    })),
+    expected: VALID
+  },
+
+  {
+    desc: 'jsonString ✖️ : a json string mismatching custom validator',
+    subject: '{ "str": "apple", "num": null }',
+    schema: jsonString(objectOf({
+      str: string,
+      num: number
+    })),
+    expected: createError(['num'], 'number', null)
   },
 
   {
